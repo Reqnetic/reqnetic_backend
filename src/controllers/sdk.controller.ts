@@ -54,10 +54,6 @@ export const order = async function (req: Request, res: Response) {
     };
 
     const addressBasedCreateParams = {
-      addressBasedPaymentNetwork: {
-        id: RequestNetwork.Types.Extension.PAYMENT_NETWORK_ID.NATIVE_TOKEN,
-        parameters: {},
-      },
       paymentNetwork: {
         id: Types.Extension.PAYMENT_NETWORK_ID.ERC20_FEE_PROXY_CONTRACT,
         parameters: {
