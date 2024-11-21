@@ -6,6 +6,11 @@ const CryptoJS = require("crypto-js");
 import { EthereumPrivateKeySignatureProvider } from "@requestnetwork/epk-signature";
 import * as RequestNetwork from "@requestnetwork/request-client.js";
 import { Order } from "../models/order.model";
+import { Types, Utils } from "@requestnetwork/request-client.js";
+import {
+  IRequestInfo,
+  RequestLogic,
+} from "@requestnetwork/request-client.js/dist/types";
 
 const decryptPk = async (encrypted_pk: string): Promise<string> => {
   const decrypted = CryptoJS.AES.decrypt(
@@ -27,33 +32,41 @@ export const order = async function (req: Request, res: Response) {
     }
 
     const privateKey = await decryptPk(req.business.encrypted_pk);
-
+    const feeRecipient = "0x0000000000000000000000000000000000000000";
     const wallet = new ethers.Wallet(privateKey);
 
     const payeeIdentity = {
-      type: RequestNetwork.Types.Identity.TYPE.ETHEREUM_ADDRESS,
+      type: Types.Identity.TYPE.ETHEREUM_ADDRESS,
       value: wallet.address,
     };
 
     const requestNetwork = requestNetworkFromPK(privateKey);
 
-    const requestInfo: RequestNetwork.Types.IRequestInfo = {
+    const requestInfo: RequestLogic.ICreateParameters | IRequestInfo = {
       currency: {
-        type: RequestNetwork.Types.RequestLogic.CURRENCY.ETH,
+        type: Types.RequestLogic.CURRENCY.ETH,
         value: "ETH",
         network: "sepolia",
       },
       expectedAmount: req.body.amount_in_wei,
       payee: payeeIdentity,
+      timestamp: Utils.getCurrentTimestampInSecond(),
     };
 
-    const addressBasedPaymentNetwork: RequestNetwork.Types.Payment.IPaymentNetworkCreateParameters =
-      {
+    const addressBasedCreateParams = {
+      addressBasedPaymentNetwork: {
         id: RequestNetwork.Types.Extension.PAYMENT_NETWORK_ID.NATIVE_TOKEN,
         parameters: {},
-      };
-    const addressBasedCreateParams = {
-      addressBasedPaymentNetwork,
+      },
+      paymentNetwork: {
+        id: Types.Extension.PAYMENT_NETWORK_ID.ERC20_FEE_PROXY_CONTRACT,
+        parameters: {
+          paymentNetworkName: "sepolia",
+          paymentAddress: payeeIdentity,
+          feeAddress: feeRecipient,
+          feeAmount: "0",
+        },
+      },
       requestInfo,
       signer: payeeIdentity,
     };
