@@ -54,20 +54,22 @@ export const order = async function (req: Request, res: Response) {
     };
 
     const addressBasedCreateParams = {
-      // paymentNetwork: {
-      //   id: Types.Extension.PAYMENT_NETWORK_ID.ERC20_FEE_PROXY_CONTRACT,
-      //   parameters: {
-      //     paymentNetworkName: "sepolia",
-      //     paymentAddress: payeeIdentity,
-      //     feeAddress: feeRecipient,
-      //     feeAmount: "0",
-      //   },
-      // },
+      paymentNetwork: {
+        id: Types.Extension.PAYMENT_NETWORK_ID.ETH_FEE_PROXY_CONTRACT,
+        parameters: {
+          paymentNetworkName: "sepolia",
+          paymentAddress: "0xb07D2398d2004378cad234DA0EF14f1c94A530e4",
+          feeAddress: "0x0000000000000000000000000000000000000000",
+          feeAmount: "0",
+          // In case of ERC20 token payment
+          // tokenAddress: "0x370DE27fdb7D1Ff1e1BaA7D11c5820a324Cf623C",
+        },
+      },
       requestInfo,
       signer: payeeIdentity,
-    }; 
+    };
     const request = await requestNetwork.createRequest(
-      addressBasedCreateParams
+      addressBasedCreateParams as any
     );
 
     const data = request.getData();
@@ -187,6 +189,7 @@ const requestNetworkFromPK = (privateKey: string) => {
     nodeConnectionConfig: {
       baseURL: "https://sepolia.gateway.request.network/",
     },
+    skipPersistence: true,
     signatureProvider,
   });
 
