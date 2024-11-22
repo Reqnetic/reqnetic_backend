@@ -9,6 +9,7 @@ import { Order } from "../models/order.model";
 import { Types, Utils } from "@requestnetwork/request-client.js";
 import {
   IRequestInfo,
+  Payment,
   RequestLogic,
 } from "@requestnetwork/request-client.js/dist/types";
 
@@ -64,12 +65,12 @@ export const order = async function (req: Request, res: Response) {
           // In case of ERC20 token payment
           // tokenAddress: "0x370DE27fdb7D1Ff1e1BaA7D11c5820a324Cf623C",
         },
-      },
+      } as Payment.PaymentNetworkCreateParameters,
       requestInfo,
       signer: payeeIdentity,
     };
     const request = await requestNetwork.createRequest(
-      addressBasedCreateParams as any
+      addressBasedCreateParams
     );
 
     const data = request.getData();
