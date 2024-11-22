@@ -54,18 +54,18 @@ export const order = async function (req: Request, res: Response) {
     };
 
     const addressBasedCreateParams = {
-      paymentNetwork: {
-        id: Types.Extension.PAYMENT_NETWORK_ID.ERC20_FEE_PROXY_CONTRACT,
-        parameters: {
-          paymentNetworkName: "sepolia",
-          paymentAddress: payeeIdentity,
-          feeAddress: feeRecipient,
-          feeAmount: "0",
-        },
-      },
+      // paymentNetwork: {
+      //   id: Types.Extension.PAYMENT_NETWORK_ID.ERC20_FEE_PROXY_CONTRACT,
+      //   parameters: {
+      //     paymentNetworkName: "sepolia",
+      //     paymentAddress: payeeIdentity,
+      //     feeAddress: feeRecipient,
+      //     feeAmount: "0",
+      //   },
+      // },
       requestInfo,
       signer: payeeIdentity,
-    };
+    }; 
     const request = await requestNetwork.createRequest(
       addressBasedCreateParams
     );
