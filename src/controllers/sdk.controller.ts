@@ -7,11 +7,6 @@ import { EthereumPrivateKeySignatureProvider } from "@requestnetwork/epk-signatu
 import * as RequestNetwork from "@requestnetwork/request-client.js";
 import { Order } from "../models/order.model";
 import { Types, Utils } from "@requestnetwork/request-client.js";
-import {
-  IRequestInfo,
-  Payment,
-  RequestLogic,
-} from "@requestnetwork/request-client.js/dist/types";
 
 const decryptPk = async (encrypted_pk: string): Promise<string> => {
   const decrypted = CryptoJS.AES.decrypt(
@@ -43,7 +38,7 @@ export const order = async function (req: Request, res: Response) {
 
     const requestNetwork = requestNetworkFromPK(privateKey);
 
-    const requestInfo: RequestLogic.ICreateParameters | IRequestInfo = {
+    const requestInfo: Types.RequestLogic.ICreateParameters = {
       currency: {
         type: Types.RequestLogic.CURRENCY.ETH,
         value: "ETH",
@@ -54,7 +49,7 @@ export const order = async function (req: Request, res: Response) {
       timestamp: Utils.getCurrentTimestampInSecond(),
     };
 
-    const addressBasedCreateParams = {
+    const addressBasedCreateParams : Types.ICreateRequestParameters = {
       paymentNetwork: {
         id: Types.Extension.PAYMENT_NETWORK_ID.ETH_FEE_PROXY_CONTRACT,
         parameters: {
@@ -71,7 +66,7 @@ export const order = async function (req: Request, res: Response) {
     };
 
     const request = await requestNetwork.createRequest(
-      addressBasedCreateParams
+      addressBasedCreateParams,
     );
 
     const data = request.getData();
