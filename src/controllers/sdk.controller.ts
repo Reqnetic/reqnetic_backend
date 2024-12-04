@@ -65,10 +65,11 @@ export const order = async function (req: Request, res: Response) {
           // In case of ERC20 token payment
           // tokenAddress: "0x370DE27fdb7D1Ff1e1BaA7D11c5820a324Cf623C",
         },
-      } as Payment.PaymentNetworkCreateParameters,
+      },
       requestInfo,
       signer: payeeIdentity,
     };
+
     const request = await requestNetwork.createRequest(
       addressBasedCreateParams
     );
