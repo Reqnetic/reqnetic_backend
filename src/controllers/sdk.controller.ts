@@ -49,7 +49,7 @@ export const order = async function (req: Request, res: Response) {
       timestamp: Utils.getCurrentTimestampInSecond(),
     };
 
-    const addressBasedCreateParams : Types.ICreateRequestParameters = {
+    const addressBasedCreateParams: Types.ICreateRequestParameters = {
       paymentNetwork: {
         id: Types.Extension.PAYMENT_NETWORK_ID.ETH_FEE_PROXY_CONTRACT,
         parameters: {
@@ -57,8 +57,6 @@ export const order = async function (req: Request, res: Response) {
           paymentAddress: "0xb07D2398d2004378cad234DA0EF14f1c94A530e4",
           feeAddress: "0x0000000000000000000000000000000000000000",
           feeAmount: "0",
-          // In case of ERC20 token payment
-          // tokenAddress: "0x370DE27fdb7D1Ff1e1BaA7D11c5820a324Cf623C",
         },
       },
       requestInfo,
@@ -66,7 +64,7 @@ export const order = async function (req: Request, res: Response) {
     };
 
     const request = await requestNetwork.createRequest(
-      addressBasedCreateParams,
+      addressBasedCreateParams
     );
 
     const data = request.getData();
@@ -85,6 +83,7 @@ export const order = async function (req: Request, res: Response) {
     await new Order(orderData).save();
     res.json(orderData);
   } catch (err) {
+    console.log(err);
     return res.json({ error: `${err}`, status: false });
   }
 };
